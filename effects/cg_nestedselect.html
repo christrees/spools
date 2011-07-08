@@ -35,51 +35,52 @@ function makeSublist(parent,child,isSubselectOptional,childVal)
 
 $(document).ready(function()
 {
-	makeSublist('cgLeague','cgTeam', true, '');
-	makeSublist('cgSport','cgLeague', false, '1');
+	makeSublist('cgSport','cgLeague', true, '');
 });
 </script>
 </head>
-<form>
-<select id="cgSport">
-    <option value="1">Baseball</option>
-    <option value="2">Basketball</option>
-    <option value="3">Cricket</option>
-    <option value="4">Football</option>
-    <option value="5">Hockey</option>
-    <option value="6">Lacrosse</option>
-    <option value="7">Roller Derby</option>
-    <option value="8">Rugby</option>
-    <option value="9">Soccer</option>
-</select>
-<select id="cgLeague">
-	<option class="sub_1" value="1">Professional Mens</option>
-	<option class="sub_1" value="2">Professional Womens</option>
-	<option class="sub_1" value="3">NCAA Mens</option>
-	<option class="sub_1" value="4">NCAA Womens</option>
-	<option class="sub_1" value="5">High School Mens</option>
-	<option class="sub_1" value="6">High School Womens</option>
-</select>
 
-<select id="cgTeam">
-	<option class="sub_1" value="1">Pro Mens 1</option>
-	<option class="sub_1" value="2">Pro Mens 2</option>
-	<option class="sub_1" value="3">Pro Mens 3</option>
-	<option class="sub_2" value="4">Pro Womens 1</option>
-	<option class="sub_2" value="5">Pro Womens 2</option>
-	<option class="sub_3" value="6">NCAA Mens 1</option>
-	<option class="sub_3" value="7">NCAA Mens 2</option>
-	<option class="sub_4" value="8">NCAA Womens 1</option>
-	<option class="sub_4" value="9">NCAA Womens 2</option>
-	<option class="sub_5" value="10">High School Mens 1</option>
-	<option class="sub_5" value="11">High School Mens 2</option>
-	<option class="sub_6" value="12">High School Womens 2</option>
-	<option class="sub_6" value="13">High School Womens 2</option>
-	<option class="sub_6" value="14">High School Womens 3</option>
-</select>
-
-</form>
 
 <body>
+<div id="msNewGameBG" class="inactive">
+    <div class="msTitle">CREATE A GAME</div>
+    <div id="msNewGameFieldsContainer">
+    <div class="msNewGameFields">
+    <div class="msNewGameFieldsText">Sport:
+    <form>
+        <select id="cgSport">
+            <option value="0">--SELECT--</option>
+            <option value="1">Baseball</option>
+            <option value="2">Basketball</option>
+            <option value="3">Cricket</option>
+            <option value="4">Football</option>
+            <option value="5">Hockey</option>
+            <option value="6">Lacrosse</option>
+            <option value="7">Roller Derby</option>
+            <option value="8">Rugby</option>
+            <option value="9">Soccer</option>
+        </select>
+    </form>
+    </div>
+    <div class="msNewGameFieldsText">League:
+    <form>
+        <select id="cgLeague">
+                <option class="sub_1" value="1">Professional Mens</option>
+                <option class="sub_1" value="2">Professional Womens</option>
+                <option class="sub_1" value="3">NCAA Mens</option>
+                <option class="sub_1" value="4">NCAA Womens</option>
+                <option class="sub_1" value="5">High School Mens</option>
+                <option class="sub_1" value="6">High School Womens</option>
+        </select>
+     </form>
+    </div>
+    <div class="msNewGameFieldsText">Home Team:</div>
+    <div class="msNewGameFieldsText">Away Team:</div>
+    <div class="msNewGameFieldsText">Game Title:</div>
+    <div class="msNewGameFieldsText">Game Date:</div>
+    <div class="msNewGameFieldsText">Start Time:</div>
+    </div>
+    </div>
+	</div>
 </body>
 </html>

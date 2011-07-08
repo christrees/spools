@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SPools gc Game Container</title>
+<!-- -->
+<link rel="stylesheet" type="text/css" href="../css/gameContainer.css" />
+<link rel="stylesheet" type="text/css" href="../css/gamerow2.css" />
+<script src="../js/jquery.min.js"></script>
+<script src="../js/jquery.tmpl.js"></script>
+<style type="text/css">
+.hastabs {
+}
+</style>
+
+
+</head>
+<body onload="goJoePaint()" leftmargin="0px" topmargin="0px" marginwidth="0px" marginheight="0px">
+<div id="gameContainer">
+  <div id="tbContainer"><div id="tbspoolsLogo"></div>
+    <div id="tbStatsContainer">
+    	<div class="tbStatsSplit"><div id="tbLevelText">LEVEL</div><div id="tbLevelScoreboardContainer"><div id="tbLevelScoreboard">AMATEAUR</div></div></div>
+        <div class="tbStatsSplit"><div id="tbTokensText">TOKENS</div><div id="tbTokensScoreboardContainer"><div id="tbTokensScoreboard">5236</div></div></div>
+    </div>
+  </div><!-- topBarContainer -->
+  <div class="bbContainer">
+   <a href="#msMySpoolsBG" class="bbMenuLinks"><span class="bbMenuLinks bbMySpoolsSection" ><span class="bbMenuTitle">MY SPOOLS</span></span></a>
+   <a href="#msGamesBG" class="bbMenuLinks"><span class="bbMenuLinks bbGamesSection"><span class="bbMenuTitle">GAMES</span></span></a>
+   <a href="#msStandingsBG" class="bbMenuLinks"><span class="bbMenuLinks bbStandingsSection"><span class="bbMenuTitle">STANDINGS</span></span></a>
+   <a href="#msMarketBG" class="bbMenuLinks"><span class="bbMenuLinks bbMarketSection"><span class="bbMenuTitle">MARKET</span></span></a>
+   <a href="#msSettingsBG" class="bbMenuLinks"><span class="bbMenuLinks bbSettingsSection"><span class="bbMenuTitle">SETTINGS</span></span></a>
+   <a href="#msLogoutBG" class="bbMenuLinks"><span class="bbMenuLinks bbLogoutSection"><span class="bbMenuTitle">LOGOUT</span></span></a>
+  </div>
+  <div class="rtContainer inactive">
+      <div id="PGTab1Container" class="PGTab"><span onclick="javascript:goCreateGame();" id="PGTabContents">Create a Game</div>
+   <div id="PGTab4Container" class="PGTab"><div id="PGTabContents4" class="PGTabContents">
+     <span id="span1" style="font-size:16px; line-height:20px;">Home Field Advantage</span>
+     <span id="span2" class="PGhide">Coming Soon</span>
+   </div></div>
+  </div>
+  <div id="msbackgroundDiv"></div>
+</div><!-- gameContainer -->
+  <!-- BEGIN ms PAGE DIV -->
+  <div id="msMySpoolsBG" class="msBG hastabs inactive"><div class="msTitle">Page <a href="gp_myspools.html">MySpools</a></div></div>
+  <div id="msGamesBG" class="msBG inactive"><div class="msTitle">Page <a href="gc_gamecontainer.html">Games</a></div><br/></div>
+  <div id="msStandingsBG" class="msBG inactive"><div class="msTitle">Page Standings</div></div>
+  <div id="msMarketBG" class="msBG inactive"><div class="msTitle">Page Market</div></div>
+  <div id="msSettingsBG" class="msBG inactive"><div class="msTitle">Page Settings</div></div>
+  <div id="msLogoutBG" class="msBG inactive"><div class="msTitle">Page Logout</div></div>
+  <!-- END PAGE DIV -->
+<script>
+/* joefancyshit tabs */
+var IdAry=['PGTabContents','PGTabContents2','PGTabContents4'];
+function joefancyshit() {
+    for (var zxc0=0;zxc0<IdAry.length;zxc0++){
+        var el=document.getElementById(IdAry[zxc0]);
+        if (el){
+            el.onmouseover=function() {changeText(this,'PGhide','PGshow');}
+            el.onmouseout=function()  {changeText(this,'PGshow','PGhide');}
+        }
+    }
+}
+function changeText(obj,cl1,cl2) {
+   obj.getElementsByTagName('SPAN')[0].className=cl1;
+   obj.getElementsByTagName('SPAN')[1].className=cl2;
+}
+function unhide(divID) {
+    //alert("Unhide " + divID);
+    //var item = document.getElementById(divID);
+    if ($(divID).hasClass("inactive")) {
+        //Take the current actives away
+        $(".active").animate({"opacity": "0"}, 200, function() { $(this).removeClass("active").addClass("inactive"); });
+        //Set the stuff to appear
+        $(divID).removeClass("inactive").addClass("active");
+        if ($(divID).hasClass("hastabs")) {
+            //alert("hastabs");
+            $(".rtContainer").removeClass("inactive").addClass("active")
+        };
+        //Now make active appear;
+        $(".active").css({"opacity": "0"}).delay(200).animate({"opacity": "1"}, 200,
+            function() {
+                //$(this).removeClass("inactive").addClass("active");
+                //alert("Done");
+            });
+    };
+}
+function goCreateGame() {
+    alert("Create a Game evnet");
+}
+function goJoePaint () { // function called on body onload event
+    /* Setup the clicks on bottom bar Menu Links */
+    $("a.bbMenuLinks").click(function () {
+        var whatclicked = $(this).attr('href');
+        //alert("CAT did a click " + whatclicked);
+        unhide(whatclicked);
+        return false; // prevent further event processing
+    });
+    joefancyshit();
+}
+</script>
+</body>
+</html>

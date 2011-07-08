@@ -1,0 +1,258 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>jQuery UI Autocomplete - Combobox</title>
+<!--
+<link rel="stylesheet" href="../css/jquery.ui.all.css">
+<link rel="stylesheet" href="../css/jquery.demos.css">
+-->
+<script src="../js/jquery-1.5.1.js"></script>
+<script src="../js/ui/jquery.ui.core.js"></script>
+<script src="../js/ui/jquery.ui.widget.js"></script>
+<script src="../js/ui/jquery.ui.button.js"></script>
+<script src="../js/ui/jquery.ui.position.js"></script>
+<script src="../js/ui/jquery.ui.autocomplete.js"></script>
+<style>
+.ui-button {  /*background-color: red;*/ margin-left: -1px; }
+.ui-button-icon-only .ui-button-text { padding: 0.35em; }
+.ui-autocomplete-input { margin: 0; padding: 0.48em 0 0.47em 0.45em; }
+.ui-widget-content .ui-icon {background-image: url(../image/ui-icons_222222_256x240.png)/*{iconsContent}*/; }
+.ui-button-icon { width: 40px; height: 40px; background-image: url(../image/cg_xcheck.png) /*{iconsContent}*/; }
+.ui-icon-check-y { background-position: 0px 0px; }
+.ui-icon-check-x { background-position: 0px -40px; }
+</style>
+<script>
+(function( $ ) {
+$.widget( "ui.combobox", {
+    /* CREATE */
+    _create: function() {
+        var self = this,
+            select = this.element.hide(),
+            selected = select.children( ":selected" ),
+            value = selected.val() ? selected.text() : "";
+        /* BEGIN messing and guessing with the input field */
+        var input = this.input = $( "<input>" )
+            .insertAfter( select )
+            .val( value )
+            .autocomplete({
+                delay: 0,
+                minLength: 0,
+                source: function( request, response ) {
+                    var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+                    response( select.children( "option" ).map(function() {
+                        var text = $( this ).text();
+                        if ( this.value && ( !request.term || matcher.test(text) ) )
+                        return {
+                            label: text.replace(
+                                new RegExp(
+                                    "(?![^&;]+;)(?!<[^<>]*)(" +
+                                    $.ui.autocomplete.escapeRegex(request.term) +
+                                    ")(?![^<>]*>)(?![^&;]+;)", "gi"
+                                ), "<strong>$1</strong>" ),
+                            value: text,
+                            option: this
+                        };
+                    }) );
+                },
+                select: function( event, ui ) {
+                    ui.item.option.selected = true;
+                    self._trigger( "selected", event, {item: ui.item.option});
+                },
+                change: function( event, ui ) {
+                    if ( !ui.item ) {
+                        var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "$", "i" ),
+                        valid = false;
+                        select.children( "option" ).each(function() {
+                            if ( $( this ).text().match( matcher ) ) {
+                                this.selected = valid = true;
+                                return false;
+                            }
+                        });
+                        if ( !valid ) {
+                            // remove invalid value, as it didn't match anything
+                            $( this ).val( "" );
+                            select.val( "" );
+                            input.data( "autocomplete" ).term = "";
+                            return false;
+                        }
+                    }
+                }
+            })
+            .addClass( "ui-widget ui-widget-content ui-corner-left" );
+        /* END messing and guessing with the input field */
+        /* BEGIN messing and filtering with the input field list items */
+        input.data( "autocomplete" )._renderItem = function( ul, item ) {
+            return $( "<li></li>" )
+            .data( "item.autocomplete", item )
+            .append( "<a>" + item.label + "</a>" )
+            .appendTo( ul );
+        };
+        /* END messing and filtering with the input field list items */
+        /* Make the darn dropdown button for the clueless */
+        this.button = $( "<button type='button'>&nbsp;</button>" )
+            .attr( "tabIndex", -1 )
+            .attr( "title", "Show All Items" )
+            .insertAfter( input )
+            .button({
+                icons: { primary: "ui-icon-check-x" },
+                text: false
+            })
+            .removeClass( "ui-corner-all" )
+            .addClass( "ui-corner-right ui-button-icon ui-icon-check-x" )
+            .click(function() {
+                // close if already visible
+                if ( input.autocomplete( "widget" ).is( ":visible" ) ) {
+                    input.autocomplete( "close" );
+                    return;
+                }
+                // work around a bug (likely same cause as #5265)
+                $( this ).blur();
+                // pass empty string as value to search for, displaying all results
+                input.autocomplete( "search", "" );
+                input.focus();
+            });
+    }, /* END of CREATE */
+    /* DESTROY */
+    destroy: function() {
+        this.input.remove();
+        this.button.remove();
+        this.element.show();
+        $.Widget.prototype.destroy.call( this );
+    } /* END of DESTROY */
+    }); /* END of Widget */
+})( jQuery ); /* add jQuery chaining */
+
+/* add the stuff */
+/*
+	$(function() {
+		$( "#combobox-sport" ).combobox();
+                $( "#combobox-league" ).combobox();
+                $( "#combobox-hometeam" ).combobox();
+                // Turn on the selector box
+                $( "#toggle" ).click(function() {
+			$( "#combobox" ).toggle();
+		});
+
+*/
+</script>
+<script id="cgStepComboSelect" type="text/html">
+    <label>${cgStepName}</label>
+</script>
+<script id="xxcgStepComboSelect" type="text/html">
+<div class="${cgStepDivClassType}">
+	<label>${cgStepName}</label>
+	<select id="${cgStepSelectType}-${cgStepName}">
+            <option value="">${cgStepSelectDefault}</option>
+            {{tmpl($data) "#cgOptionsTemplate"}}
+        </select>
+</div>    
+</script>
+<script id="cgOptionsTemplate" type="text/html">
+    {{each cgOptions}}<option value="${$value}">${$value}</option>{{/each}}
+</script>
+<script type="text/javascript">
+    alert("hello cat 1");
+  $(document).ready(function() {
+    alert("hello cat 2");
+   var createagamesteps = [
+       {  cgStepName: "Sport",
+          cgStepDivClassType: "ui-wiget",
+          cgStepSelectType: "combox",
+          cgStepSelectDefault: "Select a Sport...",
+          cgOptions: ["Baseball", "Basketball", "Cricket", "Football", "Hockey", "Lacrosse", "Roller Derby", "Rugby", "Soccer"]
+        }];
+   var xxcreateagamesteps = [
+    {0: { cgStepName: "Sport",
+          cgStepDivClassType: "ui-wiget",
+          cgStepSelectType: "combox",
+          cgStepSelectDefault: "Select a Sport...",
+          cgOptions: ["Baseball", "Basketball", "Cricket", "Football", "Hockey", "Lacrosse", "Roller Derby", "Rugby", "Soccer"]
+        },
+     1: { cgStepName: "League",
+          cgStepDivClassType: "ui-wiget",
+          cgStepSelectType: "combox",
+          cgStepSelectDefault: "Select a Sport...",
+          cgOptions: []
+        },
+     3: { cgStepName: "Home Team",
+          cgStepDivClassType: "ui-wiget",
+          cgStepSelectType: "combox",
+          cgStepSelectDefault: "Select Home Team",
+          cgOptions: []
+        },
+     4: { cgStepName: "Away Team",
+          cgStepDivClassType: "ui-wiget",
+          cgStepSelectType: "combox",
+          cgStepSelectDefault: "Select Away Team..",
+          cgOptions: []
+        },
+     5: { cgStepName: "Game Title",
+          cgStepDivClassType: "ui-wiget",
+          cgStepSelectType: "combox",
+          cgStepSelectDefault: "Select a Sport...",
+        },
+     6: { cgStepName: "Game Date",
+          cgStepDivClassType: "ui-wiget",
+          cgStepSelectType: "combox",
+          cgStepSelectDefault: "Select a Sport...",
+          cgOptions: []
+        }
+    }];
+/*
+    function createagame (whichstep){
+          $( "#cgGenerator" ).tmpl( GameRows )
+        .appendTo( "#cgInputSection" );
+*/
+alert("hello cat 3");
+        $("#cgStepComboSelect").tmpl(createagamesteps).appendTo("#createGameMain");
+alert("hello cat END???");
+});
+</script>
+</head>
+<body>
+<div id="createGameMain"></div>
+<div class="xxxdemo">
+<div class="xxxui-widget">
+	<label>Sport: </label>
+	<select id="ccccombobox-sport">
+            <option value="">Select one...</option>
+            <option value="Baseball">Baseball</option>
+            <option value="Basketball">Basketball</option>
+            <option value="Cricket">Cricket</option>
+            <option value="Football">Football</option>
+            <option value="Hockey">Hockey</option>
+            <option value="Lacrosse">Lacrosse</option>
+            <option value="Roller Derby">Roller Derby</option>
+            <option value="Rugby">Rugby</option>
+            <option value="Soccer">Soccer</option>
+	</select>
+</div>
+<div class="ui-widget">
+	<label>League: </label>
+	<select id="combobox-league">
+            <option value="x">Select one...</option>
+                <option class="sub_1" value="Professional Mens">Professional Mens</option>
+                <option class="sub_1" value="Professional Womens">Professional Womens</option>
+                <option class="sub_1" value="NCAA Mens">NCAA Mens</option>
+                <option class="sub_1" value="NCAA Womens">NCAA Womens</option>
+                <option class="sub_1" value="High School Mens">High School Mens</option>
+                <option class="sub_1" value="High School Womens">High School Womens</option>
+	</select>
+</div>
+<div class="ui-widget">
+	<label>Home Team: </label>
+	<select id="combobox-hometeam">
+            <option value="x">Select one...</option>
+                <option class="sub_1" value="Chicago Cubs">Chicago Cubs</option>
+                <option class="sub_1" value="St. Louis Cardinals">St. Louis Cardinals</option>
+                <option class="sub_1" value="Oakland Athletics">Oakland Athletics</option>
+                <option class="sub_1" value="Some Team3">Some Team3</option>
+                <option class="sub_1" value="Some Team4">Some Team4</option>
+                <option class="sub_1" value="Some Team5">Some Team5</option>
+
+	</select>
+</div>
+</div><!-- End demo -->
+</body>
+</html>
