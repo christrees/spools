@@ -298,6 +298,7 @@ function goToken(tokenid) {
         alert("I'll give you this space when I feel like it or when Joe tells me what to do.  You do know how I hate UI crap but I will plug in the logic and data arrays.");
         $("#PGGrid"+tokenid).removeClass("PGToken");
         GamePlayGrid.token[tokenid] = "HELLO";
+        goSyncTokens("CAT");
         $("#PGGridContainer").empty();
         $("#gamePlayFieldGenerator").tmpl(GamePlayGrid).appendTo("#PGGridContainer");
     };
