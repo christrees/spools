@@ -146,7 +146,7 @@
 	z-index:2;
 	float:left;
         text-align: center;
-        color: white;
+        color: green;
 }
 .PGToken {
     	background-image:url(../image/CoinIcon.png);
@@ -228,19 +228,21 @@
 </style>
 <script id="gamePlayFieldGenerator" type="text/javascript">
 {{each(i, token) token}}
-<div id="PGGrid${i}" class="PGToken PGGrid"><span id="atoken${i}" class="PGtoken" onclick="javascript:goToken(${i});" >${token}</span> </div>
+<div id="PGGrid${i}" class="{{if token}}{{else}}PGToken{{/if}} PGGrid" onclick="javascript:goToken(${i});"><span id="atoken${i}"  >${token}</span> </div>
 {{/each}}
 </script>
 <script type="text/javascript">
 var GamePlayGrid = {
-    grid: 5,
+    grid: 55,
+    user: "CAT",
+    message: null,
     players: {1234: "GSH", 0007: "CAT"},
     token: {
-  1: "GSH",  2: "CAT",  3: "Pick Me",  4: "Pick Me",  5: "Pick Me",
-  6: "GSH",  7: "CAT",  8: "Pick Me",  9: "Pick Me", 10: "Pick Me",
- 11: "GSH", 12: "CAT", 13: "Pick Me", 14: "Pick Me", 15: "Pick Me",
- 16: "GSH", 17: "CAT", 18: "Pick Me", 19: "Pick Me", 20: "Pick Me",
- 21: "GSH", 22: "CAT", 23: "Pick Me", 24: "Pick Me", 25: "Pick Me" }
+  1: "GSH",  2: "CAT",  3: null,  4: null,  5: null,
+  6: "GSH",  7: "CAT",  8: null,  9: null, 10: null,
+ 11: "GSH", 12: "CAT", 13: null, 14: null, 15: null,
+ 16: "GSH", 17: null, 18: null, 19: null, 20: null,
+ 21: "GSH", 22: null, 23: null, 24: null, 25: null }
 };
 </script>
 </head>
@@ -289,11 +291,15 @@ var GamePlayGrid = {
 
 <script type="text/javascript">
 function goToken(tokenid) {
-    alert("Stuff with Token "+tokenid+" is "+GamePlayGrid.token[tokenid]);
-    if (GamePlayGrid.token[tokenid] != "Pick Me") {
+    //alert("Stuff with Token "+tokenid+" is "+GamePlayGrid.token[tokenid]);
+    if (GamePlayGrid.token[tokenid] != null) {
         alert("Dude... "+GamePlayGrid.token[tokenid]+" ownes this space");
     } else {
         alert("I'll give you this space when I feel like it or when Joe tells me what to do.  You do know how I hate UI crap but I will plug in the logic and data arrays.");
+        $("#PGGrid"+tokenid).removeClass("PGToken");
+        GamePlayGrid.token[tokenid] = "HELLO";
+        $("#PGGridContainer").empty();
+        $("#gamePlayFieldGenerator").tmpl(GamePlayGrid).appendTo("#PGGridContainer");
     };
 };
 function goGame(gameid) {
