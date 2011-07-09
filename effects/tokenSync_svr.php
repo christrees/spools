@@ -7,7 +7,7 @@ if (isset($_GET['gpuid'])) $rtnjsonobj->symbol = $_GET['gpuid'];
 $rtnjsonobj = array(
     grid => 55,
     user => "CAT",
-    message => null,
+    message => "Hello ALL",
     players =>  array(1234 => "GSH", 0007 => "CAT"),
     token => array(
   1 => "GSH",  2 => "CAT",  3 => null,  4 => null,  5 => null,

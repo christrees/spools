@@ -304,12 +304,10 @@ function goToken(tokenid) {
     };
 };
 function goSyncTokens(gpuid) {
-    	var surl =  "tokenSync_srv.php?gpuid="+gpuid+"&callback=?";
-	$.getJSON(surl,  function(rtndata) {
-		/* me.feedback(rtndata.message, {duration: 4000, above: true}); */
-                alert("Message: " + rtndata.message);
+    var surl =  "tokenSync_srv.php?gpuid="+gpuid+"&callback=?";
+    $.getJSON(surl,  function(rtndata) {
+        alert("Message: " + rtndata.message);
     });
-
 };
 function goGame(gameid) {
   alert("hello "+gameid);
