@@ -295,27 +295,26 @@ function goToken(tokenid) {
     if (GamePlayGrid.token[tokenid] != null) {
         alert("Dude... "+GamePlayGrid.token[tokenid]+" ownes this space");
     } else {
-        alert("I'll give you this space when I feel like it or when Joe tells me what to do.  You do know how I hate UI crap but I will plug in the logic and data arrays.");
+        alert("OK Shayne, passing to server iconid: "+tokenid);
         $("#PGGrid"+tokenid).removeClass("PGToken");
         GamePlayGrid.token[tokenid] = "HELLO";
-        goSyncTokens("CAT");
+        goSyncTokens(tokenid);
         $("#PGGridContainer").empty();
         $("#gamePlayFieldGenerator").tmpl(GamePlayGrid).appendTo("#PGGridContainer");
     };
 };
-function goSyncTokens(gpuid) {
-    var surl =  "http://geosyncglobal.com/SPools/Get_GameField.php?user=1&spid=89";
+function goSyncTokens(tokenid) {
     alert("About to send");
     $.getJSON(
         "http://geosyncglobal.com/SPools/Get_GameField.php?callback=?",
         {
             "user": 1,
             "spid": 89,
-            "iconid": 22
+            "iconid": tokenid
         },
         function(rtndata) {
         alert("Message: " + rtndata.dataset.message);
-        GamePlayGrid = rtndata;
+        //GamePlayGrid = rtndata;
     });
     alert("Back from send Message: ".GamePlayGrid.messaage);
 };
