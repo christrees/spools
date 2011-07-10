@@ -304,10 +304,19 @@ function goToken(tokenid) {
     };
 };
 function goSyncTokens(gpuid) {
-    var surl =  "tokenSync_srv.php?gpuid="+gpuid+"&callback=?";
-    $.getJSON(surl,  function(rtndata) {
-        alert("Message: " + rtndata.message);
+    var surl =  "http://geosyncglobal.com/SPools/Get_GameField.php?user=1&spid=89";
+    alert("About to send");
+    $.getJSON(
+        "http://geosyncglobal.com/SPools/Get_GameField.php?callback=?",
+        {
+            "user": 1,
+            "spid": 89
+        },
+        function(rtndata) {
+        alert("Message: " + rtndata.dataset.message);
+        GamePlayGrid = rtndata;
     });
+    alert("Back from send Message: ".GamePlayGrid.messaage);
 };
 function goGame(gameid) {
   alert("hello "+gameid);

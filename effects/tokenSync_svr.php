@@ -5,17 +5,20 @@ header("content-type: application/json");
 // and 'message' - the feedback message we want the user to see.
 if (isset($_GET['gpuid'])) $rtnjsonobj->symbol = $_GET['gpuid'];
 $rtnjsonobj = array(
-    grid => 55,
-    user => "CAT",
-    message => "Hello ALL",
-    players =>  array(1234 => "GSH", 0007 => "CAT"),
-    token => array(
-  1 => "GSH",  2 => "CAT",  3 => null,  4 => null,  5 => null,
-  6 => "GSH",  7 => "CAT",  8 => null,  9 => null, 10 => null,
- 11 => "GSH", 12 => "CAT", 13 => null, 14 => null, 15 => null,
- 16 => "GSH", 17 => "CAT", 18 => null, 19 => null, 20 => null,
- 21 => "GSH", 22 => null, 23 => null, 24 => null, 25 => null )
-);
+               message => "Hello World",
+               array( Title => "rose",
+                      Price => 1.25,
+                      Number => 15
+                    ),
+               array( Title => "daisy",
+                      Price => 0.75,
+                      Number => 25,
+                    ),
+               array( Title => "orchid",
+                      Price => 1.15,
+                      Number => 7
+                    )
+             );
 // Wrap and write a JSON-formatted object with a function call, using the supplied value of parm 'callback' in the URL:
 echo $_GET['callback']. '('. json_encode($rtnjsonobj) . ')';
 ?>
