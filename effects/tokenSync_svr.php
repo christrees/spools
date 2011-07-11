@@ -20,5 +20,5 @@ $rtnjsonobj = array(
                     )
              );
 // Wrap and write a JSON-formatted object with a function call, using the supplied value of parm 'callback' in the URL:
-echo $_GET['callback']. '('. json_encode($rtnjsonobj) . ')';
+echo $_GET['jsoncallback']. '('. json_encode($rtnjsonobj) . ')';
 ?>

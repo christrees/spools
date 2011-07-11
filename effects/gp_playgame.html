@@ -152,6 +152,25 @@
     	background-image:url(../image/CoinIcon.png);
 	background-repeat:no-repeat;
 }
+.PGTokenPick {
+    	background-image:url(../image/CoinIcon.png);
+	background-repeat:no-repeat;
+          -webkit-animation-name: pulse;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: ease-in-out;
+  -webkit-animation-direction: alternate;
+}
+@-webkit-keyframes pulse {
+ from {
+   opacity: 0.0;
+   font-size: 100%;
+ }
+ to {
+   opacity: 1.0;
+   font-size: 200%;
+ }
+}
 .PGUserSpace {
            word-wrap: break-word;
 }
@@ -226,12 +245,18 @@
 	transform: rotate(-90deg);
 }
 </style>
-<script id="gamePlayFieldGenerator" type="text/javascript">
+<script id="gamePlayFieldGenerator" type="text/x-jquery-tmpl">
 {{each(i, token) token}}
 <div id="PGGrid${i}" class="{{if token}}{{else}}PGToken{{/if}} PGGrid" onclick="javascript:goToken(${i});"><span id="atoken${i}"  >${token}</span> </div>
 {{/each}}
 </script>
+<script id="gamePlayFieldGeneratornew" type="text/x-jquery-tmpl">
+{{each(i, token) gpgrid}}
+<div id="PGGrid${i}" class="{{if User_idUser}}{{else}}PGToken{{/if}} PGGrid" onclick="javascript:goToken(${i});"><span id="atoken${i}">{{if User_idUser}}${FName}{{/if}}</span></div>
+{{/each}}
+</script>
 <script type="text/javascript">
+var GamePlayGridnew = {};
 var GamePlayGrid = {
     grid: 55,
     user: "CAT",
@@ -246,24 +271,18 @@ var GamePlayGrid = {
 };
 </script>
 </head>
-<body  onload="goAssembleApp()">
+<body  onload="goAssembleApp(1,89)">
 <div id="msPlayGameBG" class="msBG active">
 <div id="PGPicksContainer">
 <div id="PGPicksInstruction">Choose your pick to win:
 </div>
 <div id="PGPicksSelectionContainer">
-<div id="PGHomeTeam">Packers</div>
-<div id="PGVS">VS</div>
-<div id="PGAwayTeam">Vikings</div>
-</div>
-<div id="PGPicksInstruction">1/25/11 at 7:15 pm EST
-</div>
+<div id="PGHomeTeam">Packers</div><div id="PGVS">VS</div><div id="PGAwayTeam">Vikings</div></div>
+<div id="PGPicksInstruction">1/25/11 at 7:15 pm EST</div>
 </div>
 <div id="PGSpoolsContainer">
-<div id="PGPicksInstruction">Choose your SPools (Max of 5 Squares):
-</div>
-<div id="PGGridContainer">
-</div>
+<div id="PGPicksInstruction">Choose your SPools (Max of 5 Squares):</div>
+<div id="PGGridContainer"></div>
 <div id="PGSpoolsNumbersHorizContainer">
 <div id="PGSpoolsNumbersHoriz">X/X</div>
 <div id="PGSpoolsNumbersHoriz">X/X</div>
@@ -281,48 +300,56 @@ var GamePlayGrid = {
 <div id="PGSpoolsHomeTeam">Packers</div>
 <div id="PGSpoolsAwayTeam">Vikings</div>
 </div>
-<div id="PGNewsContainer">
-</div>
-<div id="PGResultsContainer">
-</div>
-<div id="PGBackContainer">
-</div>
+<div id="PGNewsContainer"></div>
+<div id="PGResultsContainer"></div>
+<div id="PGBackContainer"></div>
 </div>
 
 <script type="text/javascript">
 function goToken(tokenid) {
     //alert("Stuff with Token "+tokenid+" is "+GamePlayGrid.token[tokenid]);
-    if (GamePlayGrid.token[tokenid] != null) {
-        alert("Dude... "+GamePlayGrid.token[tokenid]+" ownes this space");
+    if (GamePlayGridnew.gpgrid[tokenid].User_idUser != null) {
+        alert("Dude... "+GamePlayGridnew.gpgrid[tokenid].FName+" ownes this space");
     } else {
-        alert("OK Shayne, passing to server iconid: "+tokenid);
-        $("#PGGrid"+tokenid).removeClass("PGToken");
-        GamePlayGrid.token[tokenid] = "HELLO";
-        goSyncTokens(tokenid);
-        $("#PGGridContainer").empty();
-        $("#gamePlayFieldGenerator").tmpl(GamePlayGrid).appendTo("#PGGridContainer");
+        $("#PGGrid"+tokenid).removeClass("PGToken").addClass("PGTokenPick");
+        alert("OK Shayne, I turned on the animation and pass server iconid: "+tokenid);
+        goSyncTokens(tokenid, GamePlayGridnew.uid,  GamePlayGridnew.spid);
+        //$("#PGGridContainer").empty();
+        //$("#gamePlayFieldGenerator").tmpl(GamePlayGrid).appendTo("#PGGridContainer");
     };
 };
-function goSyncTokens(tokenid) {
-    alert("About to send");
+function goSyncTokens(tokenid, user, spid) {
+    //alert("About to send");
     $.getJSON(
         "http://geosyncglobal.com/SPools/Get_GameField.php?callback=?",
         {
-            "user": 1,
-            "spid": 89,
+            "user": user,
+            "spid": spid,
             "iconid": tokenid
         },
         function(rtndata) {
-        alert("Message: " + rtndata.dataset.message);
-        //GamePlayGrid = rtndata;
-    });
-    alert("Back from send Message: ".GamePlayGrid.messaage);
+        //alert("Message: " + rtndata.dataset.message);
+        GamePlayGridnew = rtndata.dataset;
+        alert("Back from server with Message: " + GamePlayGridnew.message
+                + " about to regen the new game field");
+        
+        //$("#gamePlayFieldGenerator").tmpl(GamePlayGrid).appendTo("#PGGridContainer");
+    })
+    .success(function() {
+        $("#PGGridContainer").empty();
+        $("#gamePlayFieldGeneratornew").tmpl(GamePlayGridnew).appendTo("#PGGridContainer");
+    })
+    .error(function() { alert("Server Communication Error"); })
+    .complete(function() { alert("complete"); });
+    return;
 };
 function goGame(gameid) {
   alert("hello "+gameid);
 };
-function goAssembleApp () {
-    $("#gamePlayFieldGenerator").tmpl(GamePlayGrid).appendTo("#PGGridContainer");
+function goAssembleApp (user, spid) {
+    goSyncTokens(0, user, spid);
+    //alert("Back from goSyncTokens: " + GamePlayGridnew.message);
+    //$("#gamePlayFieldGenerator").tmpl(GamePlayGrid).appendTo("#PGGridContainer");
     //alert("CAT finished");
 };
 </script>
